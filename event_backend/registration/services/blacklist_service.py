@@ -63,6 +63,12 @@ class BlackListService:
                 
                 for item in blacklist_data:
                     from registration.models import BlackList
+
+                    # обработка пустых значений
+                    middle_name = item.get('Отчество')
+                    if middle_name is None:
+                        middle_name = ''
+
                     BlackList.objects.update_or_create(
                         first_name=item.get('Имя', ''),
                         last_name=item.get('Фамилия', ''),

@@ -10,39 +10,6 @@ class VisitorViewSet(viewsets.ModelViewSet):
     queryset = Visitor.objects.all()
     serializer_class = VisitorSerializer
     
-    @transaction.atomic
-    def create(self, request, *args, **kwargs):
-        wave_id = request.data.get('wave_id')
-        
-        if wave_id:
-            try:
-                wave = EventWave.objects.get(id=wave_id, is_active=True)
-                
-                # Проверка capacity
-                if wave.current_count >= wave.max_capacity:
-                    return Response(
-                        {"error": "Достигнуто максимальное количество участников на этой волне"},
-                        status=status.HTTP_400_BAD_REQUEST
-                    )
-                
-            except EventWave.DoesNotExist:
-                return Response(
-                    {"error": "Волна не найдена или неактивна"},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-        
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
-        # Сохранение посетителя
-        visitor = serializer.save()
-        
-        # Увеличение счетчика волны
-        if wave_id:
-            wave.current_count += 1
-            wave.save()
-        
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class EventWaveViewSet(viewsets.ModelViewSet):
     queryset = EventWave.objects.all()

@@ -5,8 +5,16 @@ class Visitor(models.Model):
     last_name = models.CharField(max_length=100, verbose_name="Фамилия")
     middle_name = models.CharField(max_length=100, blank=True, verbose_name="Отчество")
     vk_link = models.URLField(blank=True, verbose_name="Ссылка на ВК")
+    middle_name = models.CharField(
+        max_length=100, 
+        blank=True, 
+        null=True,
+        verbose_name="Отчество"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     
+
+
     class Meta:
         verbose_name = "Посетитель"
         verbose_name_plural = "Посетители"
